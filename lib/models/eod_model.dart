@@ -157,7 +157,7 @@ class EodModel {
 
   @override
   String toString() {
-    return 'EodModel(open: $open, high: $high, low: $low, close: $close, volume: $volume, adjHigh: $adjHigh, adjLow: $adjLow, adjClose: $adjClose, adjOpen: $adjOpen, adjVolume: $adjVolume, splitFactor: $splitFactor, dividend: $dividend, symbol: $symbol, exchange: $exchange, date: $date, name: $name)';
+    return 'Name: $name || Date: ${DateFormat('yyyy-MM-dd').format(date!)}';
   }
 
   @override

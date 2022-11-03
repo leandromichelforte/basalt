@@ -21,7 +21,7 @@ class EodRepository {
       }
       return eodList;
     } on DioError catch (e) {
-      debugPrint(e.message);
+      debugPrint(e.toString());
       return e.response?.statusCode;
     } catch (e) {
       debugPrint(e.toString());

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:basalt/models/eod_model.dart';
 import 'package:basalt/resources/app_images.dart';
 import 'package:flutter/material.dart';
@@ -16,37 +18,58 @@ class EodCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey.shade300,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          gradient: LinearGradient(
+            colors: [
+              Colors.grey.shade300,
+              Colors.grey.shade300,
+              Colors.grey.shade200,
+              Colors.grey.shade100,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Row(children: [
           Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.only(right: 10),
               child: CircleAvatar(
                 backgroundColor: Colors.white,
                 radius: 24,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(AppImages.STOCK_MARKET_ICON),
+                  child: Image.asset(eod.open! <= eod.close!
+                      ? AppImages.STOCK_MARKET_GREEN_ICON
+                      : AppImages.STOCK_MARKET_RED_ICON),
                 ),
               )),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: screenSize.width * .7,
-                child: Text(
-                  "Name: ${eod.name}",
-                  style: const TextStyle(
-                      fontSize: 16, overflow: TextOverflow.ellipsis),
-                ),
-              ),
-              if (eod.date != null)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  "Date: ${DateFormat('yyyy-MM-dd').format(eod.date!)}",
-                  style: const TextStyle(fontSize: 16),
+                  "Name: ${eod.name ?? 'End-of-day'}",
+                  style: const TextStyle(overflow: TextOverflow.ellipsis),
                 ),
+                if (eod.date != null)
+                  Text("Date: ${DateFormat('yyyy-MM-dd').format(eod.date!)}"),
+              ],
+            ),
+          ),
+          Column(
+            children: [
+              Text(
+                "Open: ${eod.open}",
+                style: const TextStyle(overflow: TextOverflow.ellipsis),
+              ),
+              Text(
+                "Close: ${eod.close}",
+                style: const TextStyle(overflow: TextOverflow.ellipsis),
+              )
             ],
           )
         ]),

@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:basalt/cubit/eod_cubit.dart';
-import 'package:basalt/models/eod_model.dart';
-import 'package:basalt/views/home/widgets/eod_card_widget.dart';
-import 'package:basalt/views/home/widgets/search_field_widget.dart';
+import 'package:basalt/views/home/widgets/error_view_widget.dart';
+import 'package:basalt/views/home/widgets/loaded_view_widget.dart';
+import 'package:basalt/views/home/widgets/loading_view_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,39 +28,17 @@ class HomeView extends StatelessWidget {
               if (state is EodInitialState) {
                 _eodCubit.fetchData();
               }
-              if (state is EodLoadedState) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 20),
-                        child: SearchFieldWidget(
-                            eodCubit: _eodCubit, eodList: state.eodList),
-                      ),
-                      Expanded(
-                        child: ListView.separated(
-                          itemBuilder: (_, i) {
-                            EodModel eod;
-                            if (state.filteredEodList.isEmpty) {
-                              eod = state.eodList.elementAt(i);
-                            } else {
-                              eod = state.filteredEodList.elementAt(i);
-                            }
-                            return EodCardWidget(
-                                screenSize: screenSize, eod: eod);
-                          },
-                          separatorBuilder: (_, __) => SizedBox(height: 10),
-                          itemCount: state.filteredEodList.isEmpty
-                              ? state.eodList.length
-                              : state.filteredEodList.length,
-                        ),
-                      ),
-                    ],
-                  ),
+              if (state is EodErrorState) {
+                return ErrorViewWidget(
+                  eodCubit: _eodCubit,
+                  errorMessage: state.errorMessage,
                 );
               }
-              return Center(child: CircularProgressIndicator());
+              if (state is EodLoadedState) {
+                return LoadedViewWidget(
+                    eodCubit: _eodCubit, state: state, screenSize: screenSize);
+              }
+              return LoadingViewWidget();
             },
           ),
         ),
